@@ -1,0 +1,10 @@
+{
+  "refreshInterval": 10,
+  "servers": [
+    {
+      "name": "Server 1",
+      "host": "http://10.0.3.20:8080/data/aircraft.json",
+      "format": "data-json"
+    }
+  ]
+}
