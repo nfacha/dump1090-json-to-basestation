@@ -44,11 +44,11 @@ class Encoder {
                     this.log.debug("Invalid position");
                     continue;
                 }
-                rx += new BaseStationMessage(aircraft.hex, aircraft.flight.trim(),aircraft.speed, aircraft.track,aircraft.lat, aircraft.lon,aircraft.vert_rate, aircraft.squawk, aircraft.altitude).generate();
+                rx += new BaseStationMessage(aircraft.hex, aircraft.flight !== undefined ? aircraft.flight.trim() : '', aircraft.speed, aircraft.track, aircraft.lat, aircraft.lon, aircraft.vert_rate, aircraft.squawk, aircraft.altitude).generate();
             }
         }else if(format === 'aircraft-json'){
             for (const aircraft of data.aircraft) {
-                rx += new BaseStationMessage(aircraft.hex, aircraft.flight.trim(), aircraft.gs, aircraft.track, aircraft.lat, aircraft.lon, aircraft.baro_rate, aircraft.squawk, aircraft.alt_baro).generate();
+                rx += new BaseStationMessage(aircraft.hex, aircraft.flight !== undefined ? aircraft.flight.trim() : '', aircraft.gs, aircraft.track, aircraft.lat, aircraft.lon, aircraft.baro_rate, aircraft.squawk, aircraft.alt_baro).generate();
             }
         }
 
