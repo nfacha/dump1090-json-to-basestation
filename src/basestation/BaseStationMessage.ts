@@ -24,8 +24,8 @@ export class BaseStationMessage{
 
     constructor(hexIdent: string, callsign: string, groundSpeed: number, track: number, latitude: number, longitude: number, verticalrate: number, squawk: number, altitude: number){
         let currentDate = new Date()
-        let day = currentDate.getDate()
-        let month = currentDate.getMonth() + 1
+        let day = currentDate.getDate() <= 9 ? '0' + currentDate.getDate() : currentDate.getDate()
+        let month = (currentDate.getMonth() + 1) <= 9 ? '0' + (currentDate.getMonth() + 1) : (currentDate.getMonth() + 1)
         let year = currentDate.getFullYear()
         this.hexIdent = hexIdent;
         this.dateMessageGenerated = year + '/' + month + '/' + day;
@@ -44,6 +44,6 @@ export class BaseStationMessage{
 
     public generate(){
         const transmissionMessageType = this.onGround ? '2':'3';
-        return `${this.messageType},${transmissionMessageType},${this.sessionId},${this.aircraftId},${this.hexIdent},${this.flightId},${this.dateMessageGenerated},${this.timeMessageGenerated},${this.dateMessageLogged},${this.timeMessageLogged},${this.callsign},${this.altitude},${this.groundSpeed},${this.track},${this.latitude},${this.longitude},${this.verticalrate},${this.squawk},${this.squawkHasChanged},${this.emergency},${this.identActive},${this.onGround ? -1 : 0}\n`;
+        return `${this.messageType},${transmissionMessageType},${this.sessionId},${this.aircraftId},${this.hexIdent},${this.flightId},${this.dateMessageGenerated},${this.timeMessageGenerated}.000,${this.dateMessageLogged},${this.timeMessageLogged}.000,${this.callsign},${this.altitude},${this.groundSpeed},${this.track},${this.latitude},${this.longitude},${this.verticalrate},${this.squawk},${this.squawkHasChanged},${this.emergency},${this.identActive},${this.onGround ? -1 : 0}\n`;
     }
 }

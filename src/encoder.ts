@@ -68,7 +68,7 @@ class Encoder {
 
         //broadcast to socket
         this.log.info("Sending data to socket");
-        // this.log.info(rx);
+        this.log.info(rx);
         this.socketServer.clients.forEach((client: Client) => {
             client.sendString(rx);
         });
