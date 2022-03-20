@@ -1,0 +1,40 @@
+{
+  "now": 1647807090.4,
+  "messages": 668787,
+  "aircraft": [
+    {
+      "hex": "495245",
+      "flight": "SAT106  ",
+      "alt_baro": 3625,
+      "alt_geom": 3875,
+      "gs": 223.1,
+      "track": 358.2,
+      "baro_rate": 2176,
+      "squawk": "5752",
+      "emergency": "none",
+      "category": "A2",
+      "nav_qnh": 1015.2,
+      "nav_altitude_mcp": 8992,
+      "nav_heading": 357.2,
+      "lat": 37.060593,
+      "lon": -25.175463,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 0.2,
+      "version": 2,
+      "nic_baro": 1,
+      "nac_p": 10,
+      "nac_v": 1,
+      "sil": 3,
+      "sil_type": "perhour",
+      "gva": 2,
+      "sda": 2,
+      "modea": true,
+      "mlat": [],
+      "tisb": [],
+      "messages": 540,
+      "seen": 0.2,
+      "rssi": -4.2
+    }
+  ]
+}
