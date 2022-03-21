@@ -40,17 +40,22 @@ class Encoder {
         let rx = '';
         if(format === 'data-json'){
             for (const aircraft of data) {
-                if(aircraft.validposition !== 1){
+                if (aircraft.validposition !== 1) {
                     // this.log.debug("Invalid position");
                     continue;
                 }
                 rx += new BaseStationMessage(aircraft.hex, aircraft.flight !== undefined ? aircraft.flight.trim() : '', aircraft.speed, aircraft.track, aircraft.lat, aircraft.lon, aircraft.vert_rate, aircraft.squawk, aircraft.altitude).generate();
             }
-        }else if(format === 'aircraft-json'){
+        } else if (format === 'aircraft-json') {
             for (const aircraft of data.aircraft) {
                 rx += new BaseStationMessage(aircraft.hex, aircraft.flight !== undefined ? aircraft.flight.trim() : '', aircraft.gs, aircraft.track, aircraft.lat, aircraft.lon, aircraft.baro_rate, aircraft.squawk, aircraft.alt_baro).generate();
             }
+        } else if (format === 'vrs-aircraft-json') {
+            for (const aircraft of data.acList) {
+                rx += new BaseStationMessage(aircraft.ICAO, aircraft.Call !== undefined ? aircraft.Call.trim() : '', aircraft.Spd, aircraft.Track, aircraft.Lat, aircraft.Long, aircraft.Vsi, aircraft.Sqk, aircraft.Alt).generate();
+            }
         }
+
 
         return rx
     }
@@ -68,7 +73,7 @@ class Encoder {
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
                 this.log.error("Error while fetching data from " + server['host']);
-                // this.log.error(e);
+                this.log.error(e);
             }
         }
 
