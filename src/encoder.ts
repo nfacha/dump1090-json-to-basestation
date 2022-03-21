@@ -72,9 +72,9 @@ class Encoder {
                 });
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
-                // @ts-ignore
-                this.log.error("Error while fetching data from " + server['host'] + ": " + e.response.status);
+                this.log.error("Error while fetching data from " + server['host']);
                 // this.log.error(e);
+                // return process.exit(1);
             }
         }
 
