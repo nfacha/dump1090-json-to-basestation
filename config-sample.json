@@ -1,5 +1,6 @@
 {
   "refreshInterval": 10,
+  "timeout": 20,
   "servers": [
     {
       "name": "Server 1",

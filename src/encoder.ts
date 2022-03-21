@@ -60,7 +60,7 @@ class Encoder {
         for (const server of this.config['servers']) {
             try {
                 const serverData = await axios.get(server['host'], {
-                    timeout: 10 * 1000,
+                    timeout: this.config['timeout'] * 1000,
                     headers: {
                         'User-Agent': 'ADSB-Aggregator',
                     }
