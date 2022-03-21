@@ -39,6 +39,9 @@ class Encoder {
     public parsePlaneList(data: any, format: string): string {
         let rx = '';
         if(format === 'data-json'){
+            if (data.length === 0) {
+                return '';
+            }
             for (const aircraft of data) {
                 if (aircraft.validposition !== 1) {
                     // this.log.debug("Invalid position");
