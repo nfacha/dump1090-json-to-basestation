@@ -59,10 +59,15 @@ class Encoder {
         let rx = '';
         for (const server of this.config['servers']) {
             try {
-                const serverData = await axios.get(server['host']);
+                const serverData = await axios.get(server['host'], {
+                    timeout: 3,
+                    headers: {
+                        'User-Agent': 'ADSB-Aggregator',
+                    }
+                });
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
-                this.log.error(e);
+                this.log.error("Error while fetching data from " + server['host']);
             }
         }
 
