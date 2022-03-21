@@ -73,7 +73,7 @@ class Encoder {
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
                 this.log.error("Error while fetching data from " + server['host']);
-                this.log.error(e);
+                // this.log.error(e);
             }
         }
 
