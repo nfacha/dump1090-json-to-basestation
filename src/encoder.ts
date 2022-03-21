@@ -41,7 +41,7 @@ class Encoder {
         if(format === 'data-json'){
             for (const aircraft of data) {
                 if(aircraft.validposition !== 1){
-                    this.log.debug("Invalid position");
+                    // this.log.debug("Invalid position");
                     continue;
                 }
                 rx += new BaseStationMessage(aircraft.hex, aircraft.flight !== undefined ? aircraft.flight.trim() : '', aircraft.speed, aircraft.track, aircraft.lat, aircraft.lon, aircraft.vert_rate, aircraft.squawk, aircraft.altitude).generate();
