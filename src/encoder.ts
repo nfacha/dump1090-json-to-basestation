@@ -67,12 +67,18 @@ class Encoder {
         let rx = '';
         for (const server of this.config['servers']) {
             try {
+                let timeout = this.config['timeout'] * 1000;
+                if (server.timeoutOverride !== undefined) {
+                    timeout = server.timeoutOverride * 1000;
+                    this.log.debug("Timeout overridden to " + server.timeoutOverride + "s for server" + server.name);
+                }
                 const serverData = await axios.get(server['host'], {
-                    timeout: this.config['timeout'] * 1000,
+                    timeout: timeout,
                     headers: {
                         'User-Agent': 'ADSB-Aggregator',
                     }
                 });
+                this.log.info("Fetched data from " + server.name + "with format " + server.format);
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
                 this.log.error("Error while fetching data from " + server['host']);
@@ -87,6 +93,7 @@ class Encoder {
         this.socketServer.clients.forEach((client: Client) => {
             client.sendString(rx);
         });
+        this.log.info("Data sent to BaseStation socket");
     }
 
 }
