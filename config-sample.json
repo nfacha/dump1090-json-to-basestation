@@ -1,6 +1,8 @@
 {
   "refreshInterval": 10,
   "timeout": 20,
+  "proxies": [
+  ],
   "servers": [
     {
       "name": "Server 1",

@@ -72,12 +72,24 @@ class Encoder {
                     timeout = server.timeoutOverride * 1000;
                     this.log.debug("Timeout overridden to " + server.timeoutOverride + "s for server" + server.name);
                 }
-                const serverData = await axios.get(server['host'], {
+                let axiosConfig = {
                     timeout: timeout,
                     headers: {
                         'User-Agent': 'ADSB-Aggregator',
                     }
-                });
+                };
+                if (this.config['proxies'].length > 0) {
+                    if (server.useProxy) {
+                        const proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
+                        // @ts-ignore
+                        axiosConfig.proxy = {
+                            host: proxy.split(":")[0],
+                            port: parseInt(proxy.split(":")[1])
+                        };
+                    }
+
+                }
+                const serverData = await axios.get(server['host'], axiosConfig);
                 this.log.info("Fetched data from " + server.name + "with format " + server.format);
                 rx += this.parsePlaneList(serverData.data, server['format']);
             } catch (e) {
