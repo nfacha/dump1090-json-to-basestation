@@ -43,7 +43,10 @@ export class BaseStationMessage{
     }
 
     public generate(){
-        const transmissionMessageType = this.onGround ? '2':'3';
-        return `${this.messageType},${transmissionMessageType},${this.sessionId},${this.aircraftId},${this.hexIdent},${this.flightId},${this.dateMessageGenerated},${this.timeMessageGenerated}.000,${this.dateMessageLogged},${this.timeMessageLogged}.000,${this.callsign},${this.altitude},${this.groundSpeed},${this.track},${this.latitude},${this.longitude},${this.verticalrate},${this.squawk},${this.squawkHasChanged},${this.emergency},${this.identActive},${this.onGround ? -1 : 0}\n`;
+        if (this.hexIdent == '') {
+            return '';
+        }
+        const transmissionMessageType = this.onGround ? '3' : '2';
+        return `${this.messageType},${transmissionMessageType},${this.sessionId},${this.aircraftId},${this.hexIdent.toUpperCase()},${this.flightId},${this.dateMessageGenerated},${this.timeMessageGenerated}.000,${this.dateMessageLogged},${this.timeMessageLogged}.000,${this.callsign},${this.altitude},${this.groundSpeed},${this.track},${this.latitude},${this.longitude},${this.verticalrate},${this.squawk},${this.squawkHasChanged},${this.emergency},${this.identActive},${this.onGround ? -1 : 0}\n`;
     }
 }
