@@ -95,6 +95,10 @@ class Encoder {
                 const serverData = await axios.get(server['host'], axiosConfig);
                 this.log.info("Fetched data from " + server.name + " with format " + server.format + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
                 rx += this.parsePlaneList(serverData.data, server['format']);
+                this.socketServer.clients.forEach((client: Client) => {
+                    client.sendString(rx);
+                });
+                rx = '';
             } catch (e: any | AxiosError) {
                 const errorMsg = e.code === 'ECONNABORTED' ? 'Timeout' : e?.response?.status;
                 this.log.error("Error while fetching data from " + server['host'] + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
@@ -107,9 +111,9 @@ class Encoder {
         //broadcast to socket
         // this.log.info("Sending data to socket");
         // this.log.info(rx);
-        this.socketServer.clients.forEach((client: Client) => {
-            client.sendString(rx);
-        });
+        // this.socketServer.clients.forEach((client: Client) => {
+        //     client.sendString(rx);
+        // });
         this.log.info("Data sent to BaseStation socket");
     }
 
