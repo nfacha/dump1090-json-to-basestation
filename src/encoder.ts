@@ -65,7 +65,6 @@ class Encoder {
     }
 
     public async updateData() {
-        let rx = '';
         for (const server of this.config['servers']) {
             let proxy;
             try {
@@ -94,7 +93,7 @@ class Encoder {
                 axiosRetry(axios, {retries: 3});
                 const serverData = await axios.get(server['host'], axiosConfig);
                 this.log.info("Fetched data from " + server.name + " with format " + server.format + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
-                rx += this.parsePlaneList(serverData.data, server['format']);
+                let rx = this.parsePlaneList(serverData.data, server['format']);
                 this.socketServer.clients.forEach((client: Client) => {
                     client.sendString(rx);
                 });
@@ -114,7 +113,7 @@ class Encoder {
         // this.socketServer.clients.forEach((client: Client) => {
         //     client.sendString(rx);
         // });
-        this.log.info("Data sent to BaseStation socket");
+        this.log.info("Loop completed");
     }
 
 }
