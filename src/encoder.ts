@@ -86,6 +86,7 @@ class Encoder {
                             host: proxy.split(":")[0],
                             port: parseInt(proxy.split(":")[1])
                         };
+                        this.log.debug("Using proxy " + proxy + " for server " + server.name);
                     }
 
                 }
