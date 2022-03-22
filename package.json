@@ -20,6 +20,7 @@
     "axios": "^0.25.0"
   },
   "dependencies": {
+    "axios-retry": "^3.2.4",
     "pocket-sockets": "^1.0.1"
   }
 }

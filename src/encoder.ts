@@ -1,8 +1,9 @@
 import {Logger} from "tslog";
 import * as fs from "fs";
 import {BaseStationMessage} from "./basestation/BaseStationMessage";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {Client, TCPServer} from "pocket-sockets";
+import axiosRetry from "axios-retry";
 
 
 class Encoder {
@@ -66,6 +67,7 @@ class Encoder {
     public async updateData() {
         let rx = '';
         for (const server of this.config['servers']) {
+            let proxy;
             try {
                 let timeout = this.config['timeout'] * 1000;
                 if (server.timeoutOverride !== undefined) {
@@ -80,21 +82,23 @@ class Encoder {
                 };
                 if (this.config['proxies'].length > 0) {
                     if (server.useProxy) {
-                        const proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
+                        proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
                         // @ts-ignore
                         axiosConfig.proxy = {
                             host: proxy.split(":")[0],
                             port: parseInt(proxy.split(":")[1])
                         };
-                        this.log.debug("Using proxy " + proxy + " for server " + server.name);
                     }
 
                 }
+                axiosRetry(axios, {retries: 3});
                 const serverData = await axios.get(server['host'], axiosConfig);
-                this.log.info("Fetched data from " + server.name + "with format " + server.format);
+                this.log.info("Fetched data from " + server.name + " with format " + server.format + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
                 rx += this.parsePlaneList(serverData.data, server['format']);
-            } catch (e) {
-                this.log.error("Error while fetching data from " + server['host']);
+            } catch (e: any | AxiosError) {
+                const errorMsg = e.code === 'ECONNABORTED' ? 'Timeout' : e?.response?.status;
+                this.log.error("Error while fetching data from " + server['host'] + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
+                this.log.error("Error code was: " + errorMsg);
                 // this.log.error(e);
                 // return process.exit(1);
             }
