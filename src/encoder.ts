@@ -3,7 +3,6 @@ import * as fs from "fs";
 import {BaseStationMessage} from "./basestation/BaseStationMessage";
 import axios, {AxiosError} from "axios";
 import {Client, TCPServer} from "pocket-sockets";
-import axiosRetry from "axios-retry";
 
 
 class Encoder {
@@ -100,7 +99,6 @@ class Encoder {
                     }
 
                 }
-                axiosRetry(axios, {retries: 3});
                 const serverData = await axios.get(server['host'], axiosConfig);
                 this.log.info("Fetched data from " + server.name + " with format " + server.format + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
                 let rx = this.parsePlaneList(serverData.data, server['format']);
