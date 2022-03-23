@@ -2,6 +2,9 @@
   "refreshInterval": 10,
   "socketHost": "0.0.0.0",
   "socketPort": "20004",
+  "allowedRemotes": [
+    "127.0.0.1"
+  ],
   "timeout": 20,
   "proxies": [
   ],

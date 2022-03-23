@@ -23,7 +23,12 @@ class Encoder {
         });
         this.socketServer.listen();
         this.socketServer.onConnection((client: Client) => {
-            this.log.info("Client connected: " + client.clientOptions?.host + ":" + client.clientOptions?.port);
+            this.log.info("Client connected: " + client.getRemoteAddress() + ":" + client.getRemotePort());
+            if (!this.config['allowedRemotes'].includes(client.getRemoteAddress())) {
+                client.sendString("You are not allowed to connect to this server\n");
+                client.close();
+                this.log.warn("Client not allowed to connect: " + client.getRemoteAddress() + ":" + client.getRemotePort());
+            }
         });
 
 
