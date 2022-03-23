@@ -82,7 +82,11 @@ class Encoder {
                 };
                 if (this.config['proxies'].length > 0) {
                     if (server.useProxy) {
-                        proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
+                        if (server.proxyOverride === undefined) {
+                            proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
+                        } else {
+                            proxy = server.proxyOverride;
+                        }
                         // @ts-ignore
                         axiosConfig.proxy = {
                             host: proxy.split(":")[0],
