@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  aggregator:
+    image: facha/dump1090-json-to-basestation
+    ports:
+      - "20004:20004"
+    volumes:
+      - ./config.json:/app/config.json

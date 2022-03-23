@@ -18,8 +18,8 @@ class Encoder {
         this.config = this.loadConfig();
         this.log.info("Config loaded");
         this.socketServer = new TCPServer({
-            host: "127.0.0.1",
-            port: 20004,
+            host: this.config['socketHost'],
+            port: this.config['socketPort'],
         });
         this.socketServer.listen();
         this.socketServer.onConnection((client: Client) => {

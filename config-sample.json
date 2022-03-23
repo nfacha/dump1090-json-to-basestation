@@ -1,5 +1,7 @@
 {
   "refreshInterval": 10,
+  "socketHost": "0.0.0.0",
+  "socketPort": "20004",
   "timeout": 20,
   "proxies": [
   ],
