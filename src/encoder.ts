@@ -1,7 +1,7 @@
 import {Logger} from "tslog";
 import * as fs from "fs";
 import {BaseStationMessage} from "./basestation/BaseStationMessage";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import {Client, TCPServer} from "pocket-sockets";
 
 
@@ -43,7 +43,7 @@ class Encoder {
 
     public parsePlaneList(data: any, format: string): string {
         let rx = '';
-        if(format === 'data-json'){
+        if (format === 'data-json') {
             if (data.length === 0) {
                 return '';
             }
@@ -70,49 +70,47 @@ class Encoder {
 
     public async updateData() {
         for (const server of this.config['servers']) {
-            let proxy;
-            try {
-                let timeout = this.config['timeout'] * 1000;
-                if (server.timeoutOverride !== undefined) {
-                    timeout = server.timeoutOverride * 1000;
-                    this.log.debug("Timeout overridden to " + server.timeoutOverride + "s for server" + server.name);
+            let proxy: any;
+            let timeout = this.config['timeout'] * 1000;
+            if (server.timeoutOverride !== undefined) {
+                timeout = server.timeoutOverride * 1000;
+                this.log.debug("Timeout overridden to " + server.timeoutOverride + "s for server" + server.name);
+            }
+            let axiosConfig = {
+                timeout: timeout,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',
+                    'Referer': server.referer !== undefined ? server.referer : server.host,
                 }
-                let axiosConfig = {
-                    timeout: timeout,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',
-                        'Referer': server.referer !== undefined ? server.referer : server.host,
+            };
+            if (this.config['proxies'].length > 0) {
+                if (server.useProxy) {
+                    if (server.proxyOverride === undefined) {
+                        proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
+                    } else {
+                        proxy = server.proxyOverride;
                     }
-                };
-                if (this.config['proxies'].length > 0) {
-                    if (server.useProxy) {
-                        if (server.proxyOverride === undefined) {
-                            proxy = this.config['proxies'][Math.floor(Math.random() * this.config['proxies'].length)];
-                        } else {
-                            proxy = server.proxyOverride;
-                        }
-                        // @ts-ignore
-                        axiosConfig.proxy = {
-                            host: proxy.split(":")[0],
-                            port: parseInt(proxy.split(":")[1])
-                        };
-                    }
+                    // @ts-ignore
+                    axiosConfig.proxy = {
+                        host: proxy.split(":")[0],
+                        port: parseInt(proxy.split(":")[1])
+                    };
+                }
 
-                }
-                const serverData = await axios.get(server['host'], axiosConfig);
+            }
+            axios.get(server['host'], axiosConfig).then((serverData) => {
                 this.log.info("Fetched data from " + server.name + " with format " + server.format + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
                 let rx = this.parsePlaneList(serverData.data, server['format']);
                 this.socketServer.clients.forEach((client: Client) => {
                     client.sendString(rx);
                 });
-                rx = '';
-            } catch (e: any | AxiosError) {
+            }).catch((e) => {
                 const errorMsg = e.code === 'ECONNABORTED' ? 'Timeout' : e?.response?.status;
                 this.log.error("Error while fetching data from " + server['host'] + " using proxy " + (server.useProxy === 'true' ? 'Yes' : 'No') + (proxy !== undefined ? ' ' + proxy : ''));
                 this.log.error("Error code was: " + errorMsg);
                 // this.log.error(e);
                 // return process.exit(1);
-            }
+            });
         }
 
         //broadcast to socket
